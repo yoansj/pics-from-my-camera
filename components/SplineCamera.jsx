@@ -9,15 +9,28 @@ export default function SplineCamera({ ...props }) {
 
   const group = useRef();
 
-  // useFrame((state) => {
-  //   const t = state.clock.getElapsedTime();
-  //   if (group.current) {
-  //     group.current.rotation.x = MathUtils.lerp(group.current.rotation.x, open ? Math.cos(t / 10) / 10 + 0.25 : 0, 0.1);
-  //     group.current.rotation.y = MathUtils.lerp(group.current.rotation.y, open ? Math.sin(t / 10) / 4 : 0, 0.1);
-  //     group.current.rotation.z = MathUtils.lerp(group.current.rotation.z, open ? Math.sin(t / 10) / 10 : 0, 0.1);
-  //     group.current.position.y = MathUtils.lerp(group.current.position.y, open ? (-2 + Math.sin(t)) / 3 : -4.3, 0.1);
-  //   }
-  // });
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+
+    if (group.current) {
+      if (props.clicked === true) {
+        group.current.rotation.y = MathUtils.lerp(group.current.rotation.y, 0, 0.1);
+
+        group.current.position.y = MathUtils.lerp(group.current.position.y, (0.1 + Math.sin(t) / 3) / 2, 0.1);
+        return;
+      }
+      group.current.rotation.y = MathUtils.lerp(
+        group.current.rotation.y,
+        props.clicked === false ? group.current.rotation.y + 0.05 : 0,
+        0.1
+      );
+      group.current.position.y = MathUtils.lerp(
+        group.current.position.y,
+        props.clicked === false ? (2 + Math.sin(t)) / 3 : 0,
+        0.1
+      );
+    }
+  });
 
   return (
     <>
