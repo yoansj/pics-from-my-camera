@@ -3,9 +3,12 @@ import { PerspectiveCamera, RenderTexture, Text } from "@react-three/drei";
 import { MathUtils, Group } from "three";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
+import { useAppStore } from "../contexts/appState";
+import CameraScreen from "./CameraScreen";
 
 export default function SplineCamera({ ...props }) {
   const { nodes, materials } = useSpline("https://prod.spline.design/erd3L7Tl6g7REq9t/scene.splinecode");
+  const clickedOnCamera = useAppStore((state) => state.clickedOnCamera);
 
   const group = useRef();
 
@@ -13,22 +16,14 @@ export default function SplineCamera({ ...props }) {
     const t = state.clock.getElapsedTime();
 
     if (group.current) {
-      if (props.clicked === true) {
+      if (clickedOnCamera === true) {
         group.current.rotation.y = MathUtils.lerp(group.current.rotation.y, 0, 0.1);
 
         group.current.position.y = MathUtils.lerp(group.current.position.y, (0.1 + Math.sin(t) / 3) / 2, 0.1);
         return;
       }
-      group.current.rotation.y = MathUtils.lerp(
-        group.current.rotation.y,
-        props.clicked === false ? group.current.rotation.y + 0.05 : 0,
-        0.1
-      );
-      group.current.position.y = MathUtils.lerp(
-        group.current.position.y,
-        props.clicked === false ? (2 + Math.sin(t)) / 3 : 0,
-        0.1
-      );
+      group.current.rotation.y = MathUtils.lerp(group.current.rotation.y, group.current.rotation.y + 0.05, 0.1);
+      group.current.position.y = MathUtils.lerp(group.current.position.y, (2 + Math.sin(t)) / 3, 0.1);
     }
   });
 
@@ -43,17 +38,7 @@ export default function SplineCamera({ ...props }) {
             receiveShadow
             position={[1, -16.09, -178.85]}
           >
-            <meshStandardMaterial>
-              <RenderTexture attach="map" anisotropy={16} width={1000}>
-                <PerspectiveCamera makeDefault manual aspect={1 / 1} position={[0, 0, 5]} />
-                <color attach="background" args={["orange"]} />
-                <ambientLight intensity={0.5} />
-                <directionalLight position={[10, 10, 5]} />
-                <Text fontSize={0.4} color="#555">
-                  Pictures from my camera
-                </Text>
-              </RenderTexture>
-            </meshStandardMaterial>
+            <CameraScreen />
           </mesh>
           <mesh
             name="Camera body"

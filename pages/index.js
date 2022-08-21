@@ -1,5 +1,6 @@
 import { Loader } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import { Leva } from "leva";
 import Head from "next/head";
 import Scene from "../components/Scene";
 
@@ -12,11 +13,15 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Loader />
-      <main style={{ width: "100vw", height: "100vh" }}>
-        <h1 style={{ position: "absolute", zIndex: 100 }}>Pictures from my camera</h1>
+      <main className="w-[100vw] h-[100vh] overflow-hidden">
+        <h1 className="font-extrabold text-4xl ml-2 title absolute z-50 top-[-5vh] opacity-0">
+          pictures from my camera
+        </h1>
+        <p className="clickOnCamera absolute z-50 bottom-3 text-center w-full opacity-0">- click on the camera -</p>
         <Canvas camera={{ position: [80, 62, 77] }}>
           <Scene />
         </Canvas>
+        <Leva hidden />
       </main>
     </div>
   );

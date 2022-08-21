@@ -4,19 +4,26 @@ import { useFrame, useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useControls } from "leva";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useAppStore } from "../contexts/appState";
 import Box from "./Box";
-import CameraAnimation from "./CameraAnimation";
 import Debug from "./Debug";
 import SplineCamera from "./SplineCamera";
 
 export default function Scene() {
-  const [introDone, setIntroDone] = useState(false);
-  const [click, setClick] = useState(false);
+  const cameraIntroDone = useAppStore((state) => state.cameraIntroDone);
+  const cameraIntroSet = useAppStore((state) => state.cameraIntroSet);
+  const clickedOnCamera = useAppStore((state) => state.clickedOnCamera);
+  const clickedOnCameraSet = useAppStore((state) => state.clickedOnCameraSet);
 
   const { camera } = useThree();
-  const orbitControlsRef = useRef();
 
-  const [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
+  const clickOnCameraAnimation = useMemo(() => {
+    return gsap.fromTo(
+      ".clickOnCamera",
+      { opacity: 0 },
+      { opacity: 1, duration: 1, repeat: -1, yoyo: true, paused: true }
+    );
+  }, []);
 
   const [{ debug, orbitControls, cameraPosition }, set] = useControls(() => ({
     debug: false,
@@ -25,7 +32,6 @@ export default function Scene() {
   }));
 
   useEffect(() => {
-    camera.lookAt(0, 1, 0);
     gsap.to(camera.position, {
       x: 4.2,
       y: 6.6,
@@ -35,14 +41,16 @@ export default function Scene() {
         camera.lookAt(0, 1, 0);
       },
       onComplete: () => {
-        setIntroDone(true);
+        cameraIntroSet(true);
+        clickOnCameraAnimation.play();
       },
     });
   }, [camera]);
 
   const handleZoomAnimation = () => {
-    if (introDone) {
-      setClick(true);
+    if (cameraIntroDone) {
+      console.log("Into zoom !");
+      clickedOnCameraSet(true);
       gsap.to(camera.position, {
         x: 0,
         y: 0,
@@ -51,12 +59,17 @@ export default function Scene() {
         onUpdate: () => {
           camera.lookAt(0, 0, 0);
         },
+        onComplete: () => {
+          gsap.to(".title", { opacity: 1, top: 3, duration: 1 });
+          clickOnCameraAnimation.pause(1);
+          gsap.to(".clickOnCamera", { opacity: 0, duration: 1 });
+        },
       });
     }
   };
 
   useFrame((state) => {
-    set({ cameraPosition: { x: state.camera.position.x, y: state.camera.position.y, z: state.camera.position.z } });
+    // set({ cameraPosition: { x: state.camera.position.x, y: state.camera.position.y, z: state.camera.position.z } });
   });
 
   return (
@@ -66,7 +79,7 @@ export default function Scene() {
       {orbitControls && <OrbitControls enabled />}
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
-      <SplineCamera clicked={click} onClick={handleZoomAnimation} />
+      <SplineCamera clicked={false} onClick={handleZoomAnimation} />
       <Cloud opacity={1} speed={0.6} width={400} depth={1.5} segments={400} position={[0, 62, 0]} />
     </>
   );
