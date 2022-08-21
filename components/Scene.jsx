@@ -14,6 +14,7 @@ export default function Scene() {
   const cameraIntroSet = useAppStore((state) => state.cameraIntroSet);
   const clickedOnCamera = useAppStore((state) => state.clickedOnCamera);
   const clickedOnCameraSet = useAppStore((state) => state.clickedOnCameraSet);
+  const finishedZoomSet = useAppStore((state) => state.finishedZoomSet);
 
   const { camera } = useThree();
 
@@ -30,6 +31,10 @@ export default function Scene() {
     orbitControls: false,
     cameraPosition: { x: 0, y: 0, z: 0 },
   }));
+
+  useFrame((state) => {
+    // set({ cameraPosition: { x: state.camera.position.x, y: state.camera.position.y, z: state.camera.position.z } });
+  });
 
   useEffect(() => {
     gsap.to(camera.position, {
@@ -63,14 +68,11 @@ export default function Scene() {
           gsap.to(".title", { opacity: 1, top: 3, duration: 1 });
           clickOnCameraAnimation.pause(1);
           gsap.to(".clickOnCamera", { opacity: 0, duration: 1 });
+          finishedZoomSet(true);
         },
       });
     }
   };
-
-  useFrame((state) => {
-    // set({ cameraPosition: { x: state.camera.position.x, y: state.camera.position.y, z: state.camera.position.z } });
-  });
 
   return (
     <>
@@ -80,7 +82,7 @@ export default function Scene() {
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
       <SplineCamera clicked={false} onClick={handleZoomAnimation} />
-      <Cloud opacity={1} speed={0.6} width={400} depth={1.5} segments={400} position={[0, 62, 0]} />
+      <Cloud opacity={1} speed={0.4} width={400} depth={1.5} segments={400} position={[0, 62, 0]} />
     </>
   );
 }

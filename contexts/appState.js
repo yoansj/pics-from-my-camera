@@ -23,4 +23,16 @@ export const useAppStore = create((set) => ({
    * @returns void
    */
   clickedOnCameraSet: (v) => set({ clickedOnCamera: v }),
+
+  /**
+   * Post click animation state
+   */
+  finishedZoom: false,
+
+  /**
+   * Changes the value of the finishedZoom property
+   * @param {boolean} v
+   * @returns void
+   */
+  finishedZoomSet: (v) => set({ finishedZoom: v }),
 }));

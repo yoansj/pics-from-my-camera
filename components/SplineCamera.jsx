@@ -2,7 +2,7 @@ import useSpline from "@splinetool/r3f-spline";
 import { PerspectiveCamera, RenderTexture, Text } from "@react-three/drei";
 import { MathUtils, Group } from "three";
 import { useFrame } from "@react-three/fiber";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useAppStore } from "../contexts/appState";
 import CameraScreen from "./CameraScreen";
 
