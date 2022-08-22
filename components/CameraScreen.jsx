@@ -1,13 +1,43 @@
-import { PerspectiveCamera, RenderTexture, Text } from "@react-three/drei";
+import { PerspectiveCamera, RenderTexture, Text, Image } from "@react-three/drei";
 import gsap from "gsap";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import imageList from "../assets/imageList";
 import { useAppStore } from "../contexts/appState";
+import { CameraOsContext } from "../contexts/CameraOs";
+import useImagesTextures from "../hooks/useImagesTextures";
 
 export default function CameraScreen({ ...props }) {
-  const screenColor = useRef();
   const finishedZoom = useAppStore((state) => state.finishedZoom);
+  const textures = useImagesTextures();
+
+  const screenColor = useRef();
+  const imageRef = useRef();
+  const cameraOsContext = useContext(CameraOsContext);
 
   const [colorFaded, setColorFaded] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
+
+  const exitTween = useMemo(() => {
+    if (imageRef.current) {
+      console.log(imageRef.current.position);
+      return gsap.to(imageRef.current.position, {
+        x: 10,
+        duration: 0.5,
+        paused: true,
+        onStart: () => {
+          console.log("onStart");
+        },
+      });
+    }
+  }, [imageRef]);
+
+  // cameraOsContext.setExitTween(exitTween);
+
+  // useEffect(() => {
+  //   if (exitTween) {
+  //     cameraOsContext.setExitTween(exitTween);
+  //   }
+  // }, [exitTween, cameraOsContext]);
 
   useEffect(() => {
     if (finishedZoom === true) {
@@ -25,6 +55,7 @@ export default function CameraScreen({ ...props }) {
         <Text fontSize={0.4} color="#555">
           {colorFaded ? "cameraOs" : ""}
         </Text>
+        <Image ref={imageRef} position={[0, 0, 0]} scale={[5, 5, 5]} texture={textures[0]} />
       </RenderTexture>
     </meshStandardMaterial>
   );

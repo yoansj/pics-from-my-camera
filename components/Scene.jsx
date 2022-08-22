@@ -54,7 +54,6 @@ export default function Scene() {
 
   const handleZoomAnimation = () => {
     if (cameraIntroDone) {
-      console.log("Into zoom !");
       clickedOnCameraSet(true);
       gsap.to(camera.position, {
         x: 0,
