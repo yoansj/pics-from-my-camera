@@ -6,6 +6,8 @@ import useImagesTextures from "../hooks/useImagesTextures";
 
 function CameraScreen({ ...props }, ref) {
   const finishedZoom = useAppStore((state) => state.finishedZoom);
+  const currentPictureSet = useAppStore((state) => state.currentPictureSet);
+  const currentPicture = useAppStore((state) => state.currentPicture);
   const textures = useImagesTextures();
 
   const screenColor = useRef();
@@ -19,38 +21,30 @@ function CameraScreen({ ...props }, ref) {
       x: 7,
       duration: 0.5,
       onComplete: () => {
-    setImageIndex((imageIndex) => (imageIndex + 1) % textures.length);
+        console.log(textures[imageIndex].image);
+        setImageIndex((imageIndex) => (imageIndex + 1) % textures.length);
+        currentPictureSet((currentPicture + 1) % textures.length);
         gsap.fromTo(imageRef.current.position, { x: -7 }, { x: 0, duration: 0.5, });
       }
     })
   }
 
-  const testExposedFunction = () => {
-    console.log("Yoyoyoyoyoy");
-    console.log("Test OK !");
-    if (tweenTest) tweenTest.play();
-  }
-
-  const tweenTest = useMemo(() => {
-    if (imageRef.current !== undefined) {
-      return gsap.to(imageRef.current.position, {
-        x: 10,
-        duration: 1,
-        paused: true,
-        onStart: () => {
-          console.log("onStart");
-        },
-      });
-    }
-    return undefined;
-  }, [imageRef.current]);
+  const previousImage = () => {
+    gsap.to(imageRef.current.position, {
+      x: -7,
+      duration: 0.5,
+      onComplete: () => {
+        setImageIndex((imageIndex) => (imageIndex - 1 + textures.length) % textures.length);
+        currentPictureSet((currentPicture - 1 + textures.length) % textures.length);
+        gsap.fromTo(imageRef.current.position, { x: 7 }, { x: 0, duration: 0.5, });
+      }
+    })
+  };
 
   useImperativeHandle(ref, () => ({
-    testExposedFunction,
+    previousImage,
     nextImage,
   }))
-
-  // TODO: Use forwardref to expose animations to parent component
 
   useEffect(() => {
     if (finishedZoom === true) {

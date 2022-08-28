@@ -1,11 +1,11 @@
 import useSpline from "@splinetool/r3f-spline";
-import { Image, PerspectiveCamera, RenderTexture, Text } from "@react-three/drei";
-import { MathUtils, Group } from "three";
+import { MathUtils } from "three";
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useAppStore } from "../contexts/appState";
 import CameraScreen from "./CameraScreen";
 import useImagesTextures from "../hooks/useImagesTextures";
+import gsap from "gsap";
 
 export default function SplineCamera({ ...props }) {
   const { nodes, materials } = useSpline("https://prod.spline.design/erd3L7Tl6g7REq9t/scene.splinecode");
@@ -33,11 +33,13 @@ export default function SplineCamera({ ...props }) {
     }
   });
 
+  const growImage = () => {
+    gsap.to(".modal", { scale: 1, duration: 0.5 });
+  }
+
   return (
     <group {...props} dispose={null} ref={group}>
       <group name="Camera" position={[0, 0, 0]} scale={0.01}>
-      <Image name="cameraImageTest" ref={imageRef} position={[0, 3, 0]} scale={[5, 5, 5]} texture={textures[0]} />
-
         <mesh
           name="Camera screen"
           geometry={nodes["Camera screen"].geometry}
@@ -108,11 +110,7 @@ export default function SplineCamera({ ...props }) {
           position={[25.91, -132.07, -164.58]}
           rotation={[-Math.PI / 2, 0, 0]}
           scale={0.5}
-          onClick={() => {
-            if (cameraScreenRef.current !== undefined) {
-              cameraScreenRef.current.testExposedFunction();
-            }
-          }}
+          onClick={growImage}
         >
           <group
             name="Grow button text"
@@ -204,6 +202,11 @@ export default function SplineCamera({ ...props }) {
           position={[129.41, -132.07, -167.39]}
           rotation={[-Math.PI / 2, 0, 0]}
           scale={0.5}
+          onClick={() => {
+            if (cameraScreenRef.current !== undefined) {
+              cameraScreenRef.current.previousImage();
+            }
+          }}
         >
           <group name="Left button text" position={[4.61, 47.72, -22.02]} rotation={[-Math.PI / 2, 0, 0]} scale={20}>
             <mesh

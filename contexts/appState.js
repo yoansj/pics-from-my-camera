@@ -35,4 +35,20 @@ export const useAppStore = create((set) => ({
    * @returns void
    */
   finishedZoomSet: (v) => set({ finishedZoom: v }),
+
+  /**
+   * Picture being displayed on the camera
+   */
+  currentPicture: 0,
+
+  /**
+   * Changes the value of the currentPicture property
+   * @param {number} v
+   * @returns void
+   */
+  currentPictureSet: (v) => set({ currentPicture: v }),
+
+  textures: [],
+
+  texturesSet: (v) => set({ textures: v }),
 }));

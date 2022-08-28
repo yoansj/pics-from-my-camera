@@ -2,6 +2,7 @@ import { Loader } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Leva } from "leva";
 import Head from "next/head";
+import Modal from "../components/Modal";
 import Scene from "../components/Scene";
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
         </Head>
         <Loader />
         <main className="w-[100vw] h-[100vh] overflow-hidden">
+        <Modal />
           <h1 className="font-extrabold text-4xl ml-2 title absolute z-50 top-[-5vh] opacity-0">
             pictures from my camera
           </h1>
