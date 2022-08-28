@@ -21,24 +21,44 @@ function CameraScreen({ ...props }, ref) {
       x: 7,
       duration: 0.5,
       onComplete: () => {
-        console.log(textures[imageIndex].image);
-        setImageIndex((imageIndex) => (imageIndex + 1) % textures.length);
-        currentPictureSet((currentPicture + 1) % textures.length);
-        gsap.fromTo(imageRef.current.position, { x: -7 }, { x: 0, duration: 0.5, });
-      }
-    })
-  }
+        console.log(imageIndex, currentPicture);
+        if (imageIndex + 1 > textures.length - 1) {
+          setImageIndex(0);
+          currentPictureSet(0);
+        } else {
+          setImageIndex((i) => i + 1);
+          currentPictureSet(imageIndex + 1);
+        }
+        console.log(imageIndex, currentPicture);
+        gsap.fromTo(
+          imageRef.current.position,
+          { x: -7 },
+          { x: 0, duration: 0.5 }
+        );
+      },
+    });
+  };
 
   const previousImage = () => {
     gsap.to(imageRef.current.position, {
       x: -7,
       duration: 0.5,
       onComplete: () => {
-        setImageIndex((imageIndex) => (imageIndex - 1 + textures.length) % textures.length);
-        currentPictureSet((currentPicture - 1 + textures.length) % textures.length);
-        gsap.fromTo(imageRef.current.position, { x: 7 }, { x: 0, duration: 0.5, });
-      }
-    })
+        if (imageIndex - 1 < 0) {
+          setImageIndex(textures.length - 1);
+          currentPictureSet(textures.length - 1);
+        } else {
+          setImageIndex((imageIndex) => imageIndex - 1);
+          currentPictureSet(imageIndex - 1);
+        }
+        console.log(imageIndex, currentPicture);
+        gsap.fromTo(
+          imageRef.current.position,
+          { x: 7 },
+          { x: 0, duration: 0.5 }
+        );
+      },
+    });
   };
 
   useImperativeHandle(ref, () => ({

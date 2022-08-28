@@ -34,8 +34,9 @@ export default function SplineCamera({ ...props }) {
   });
 
   const growImage = () => {
-    gsap.to(".modal", { scale: 1, duration: 0.5 });
-  }
+    gsap.set(".modal", { zIndex: 51 });
+    gsap.to(".modal", { opacity: 1, zIndex: 51, duration: 0.5 });
+  };
 
   return (
     <group {...props} dispose={null} ref={group}>
@@ -171,8 +172,9 @@ export default function SplineCamera({ ...props }) {
           position={[79, -132.07, -165.27]}
           rotation={[-Math.PI / 2, 0, 0]}
           scale={0.5}
-          onClick={() => {
+          onClick={(e) => {
             if (cameraScreenRef.current !== undefined) {
+              e.stopPropagation();
               cameraScreenRef.current.nextImage();
             }
           }}
@@ -202,13 +204,19 @@ export default function SplineCamera({ ...props }) {
           position={[129.41, -132.07, -167.39]}
           rotation={[-Math.PI / 2, 0, 0]}
           scale={0.5}
-          onClick={() => {
+          onClick={(e) => {
             if (cameraScreenRef.current !== undefined) {
+              e.stopPropagation();
               cameraScreenRef.current.previousImage();
             }
           }}
         >
-          <group name="Left button text" position={[4.61, 47.72, -22.02]} rotation={[-Math.PI / 2, 0, 0]} scale={20}>
+          <group
+            name="Left button text"
+            position={[4.61, 47.72, -22.02]}
+            rotation={[-Math.PI / 2, 0, 0]}
+            scale={20}
+          >
             <mesh
               name=">1"
               geometry={nodes[">1"].geometry}

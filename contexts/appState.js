@@ -47,8 +47,4 @@ export const useAppStore = create((set) => ({
    * @returns void
    */
   currentPictureSet: (v) => set({ currentPicture: v }),
-
-  textures: [],
-
-  texturesSet: (v) => set({ textures: v }),
 }));

@@ -32,9 +32,9 @@ export default function Scene() {
     cameraPosition: { x: 0, y: 0, z: 0 },
   }));
 
-  useFrame((state) => {
-    // set({ cameraPosition: { x: state.camera.position.x, y: state.camera.position.y, z: state.camera.position.z } });
-  });
+  // useFrame((state) => {
+  // set({ cameraPosition: { x: state.camera.position.x, y: state.camera.position.y, z: state.camera.position.z } });
+  // });
 
   useEffect(() => {
     gsap.to(camera.position, {
@@ -80,8 +80,21 @@ export default function Scene() {
       {orbitControls && <OrbitControls enabled />}
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
-      <SplineCamera clicked={false} onClick={handleZoomAnimation} />
-      <Cloud opacity={1} speed={0.4} width={400} depth={1.5} segments={400} position={[0, 62, 0]} />
+      <SplineCamera
+        clicked={false}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleZoomAnimation();
+        }}
+      />
+      <Cloud
+        opacity={1}
+        speed={0.4}
+        width={400}
+        depth={1.5}
+        segments={400}
+        position={[0, 62, 0]}
+      />
     </>
   );
 }
