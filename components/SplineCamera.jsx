@@ -1,19 +1,22 @@
 import useSpline from "@splinetool/r3f-spline";
-import { PerspectiveCamera, RenderTexture, Text } from "@react-three/drei";
+import { Image, PerspectiveCamera, RenderTexture, Text } from "@react-three/drei";
 import { MathUtils, Group } from "three";
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useRef } from "react";
 import { useAppStore } from "../contexts/appState";
 import CameraScreen from "./CameraScreen";
-import { CameraOsContext } from "../contexts/CameraOs";
+import useImagesTextures from "../hooks/useImagesTextures";
 
 export default function SplineCamera({ ...props }) {
   const { nodes, materials } = useSpline("https://prod.spline.design/erd3L7Tl6g7REq9t/scene.splinecode");
+  const imageRef = useRef();
 
   const clickedOnCamera = useAppStore((state) => state.clickedOnCamera);
-  const cameraOsContext = useContext(CameraOsContext);
+
+  const textures = useImagesTextures();
 
   const group = useRef();
+  const cameraScreenRef = useRef();
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
@@ -33,6 +36,8 @@ export default function SplineCamera({ ...props }) {
   return (
     <group {...props} dispose={null} ref={group}>
       <group name="Camera" position={[0, 0, 0]} scale={0.01}>
+      <Image name="cameraImageTest" ref={imageRef} position={[0, 3, 0]} scale={[5, 5, 5]} texture={textures[0]} />
+
         <mesh
           name="Camera screen"
           geometry={nodes["Camera screen"].geometry}
@@ -40,7 +45,7 @@ export default function SplineCamera({ ...props }) {
           receiveShadow
           position={[1, -16.09, -178.85]}
         >
-          <CameraScreen />
+          <CameraScreen ref={cameraScreenRef} />
         </mesh>
         <mesh
           name="Camera body"
@@ -103,6 +108,11 @@ export default function SplineCamera({ ...props }) {
           position={[25.91, -132.07, -164.58]}
           rotation={[-Math.PI / 2, 0, 0]}
           scale={0.5}
+          onClick={() => {
+            if (cameraScreenRef.current !== undefined) {
+              cameraScreenRef.current.testExposedFunction();
+            }
+          }}
         >
           <group
             name="Grow button text"
@@ -163,7 +173,11 @@ export default function SplineCamera({ ...props }) {
           position={[79, -132.07, -165.27]}
           rotation={[-Math.PI / 2, 0, 0]}
           scale={0.5}
-          onClick={() => cameraOsContext.exitTween.play()}
+          onClick={() => {
+            if (cameraScreenRef.current !== undefined) {
+              cameraScreenRef.current.nextImage();
+            }
+          }}
         >
           <group
             name="Right button text"
