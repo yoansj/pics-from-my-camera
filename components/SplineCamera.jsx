@@ -138,6 +138,10 @@ export default function SplineCamera({ ...props }) {
           position={[-25.07, -132.07, -164.72]}
           rotation={[-Math.PI / 2, 0, 0]}
           scale={0.5}
+          onClick={(e) => {
+            e.stopPropagation();
+            gsap.to(".sideModal", { right: 0, duration: 1 });
+          }}
         >
           <group
             name="Information button text"
