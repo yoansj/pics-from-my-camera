@@ -1,18 +1,16 @@
-import { useSpring, a, easings } from "@react-spring/three";
-import { Cloud, OrbitControls, PerspectiveCamera, Sky, useProgress } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { Cloud, OrbitControls, Sky } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useControls } from "leva";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useAppStore } from "../contexts/appState";
-import Box from "./Box";
 import Debug from "./Debug";
 import SplineCamera from "./SplineCamera";
+import { EffectComposer, Bloom, Selection } from "@react-three/postprocessing";
 
 export default function Scene() {
   const cameraIntroDone = useAppStore((state) => state.cameraIntroDone);
   const cameraIntroSet = useAppStore((state) => state.cameraIntroSet);
-  const clickedOnCamera = useAppStore((state) => state.clickedOnCamera);
   const clickedOnCameraSet = useAppStore((state) => state.clickedOnCameraSet);
   const finishedZoomSet = useAppStore((state) => state.finishedZoomSet);
 
@@ -26,15 +24,10 @@ export default function Scene() {
     );
   }, []);
 
-  const [{ debug, orbitControls, cameraPosition }, set] = useControls(() => ({
+  const [{ debug, orbitControls }] = useControls(() => ({
     debug: false,
     orbitControls: false,
-    cameraPosition: { x: 0, y: 0, z: 0 },
   }));
-
-  // useFrame((state) => {
-  // set({ cameraPosition: { x: state.camera.position.x, y: state.camera.position.y, z: state.camera.position.z } });
-  // });
 
   useEffect(() => {
     gsap.to(camera.position, {
@@ -76,17 +69,29 @@ export default function Scene() {
   return (
     <>
       {debug && <Debug />}
+      <EffectComposer>
+        <Bloom
+          intensity={0.6}
+          luminanceThreshold={0.45}
+          luminanceSmoothing={0.7}
+          height={300}
+        />
+      </EffectComposer>
       <Sky sunPosition={[500, 150, -1000]} turbidity={0.1} />
       {orbitControls && <OrbitControls enabled />}
-      <ambientLight />
+      <ambientLight color="#ffdab9" intensity={0.3} />
+      <ambientLight intensity={0.4} />
       <pointLight position={[10, 10, 10]} />
-      <SplineCamera
-        clicked={false}
-        onClick={(e) => {
-          e.stopPropagation();
-          handleZoomAnimation();
-        }}
-      />
+      <Selection>
+        <SplineCamera
+          clicked={false}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleZoomAnimation();
+          }}
+        />
+      </Selection>
+
       <Cloud
         opacity={1}
         speed={0.4}

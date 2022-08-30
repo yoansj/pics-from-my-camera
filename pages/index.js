@@ -2,11 +2,29 @@ import { Loader } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Leva } from "leva";
 import Head from "next/head";
+import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
 import Scene from "../components/Scene";
 import SideModal from "../components/SideModal";
 
 export default function Home() {
+  const [debug, setDebug] = useState(false);
+
+  const debugHandler = (e) => {
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "d") {
+        setDebug((d) => !d);
+      }
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", debugHandler);
+    return () => {
+      window.removeEventListener("keydown", debugHandler);
+    };
+  });
+
   return (
     <div>
       <Head>
@@ -29,7 +47,7 @@ export default function Home() {
         <Canvas camera={{ position: [80, 62, 77] }}>
           <Scene />
         </Canvas>
-        <Leva hidden />
+        <Leva hidden={debug === false} />
       </main>
     </div>
   );
