@@ -6,12 +6,18 @@ import { useAppStore } from "../contexts/appState";
 import CameraScreen from "./CameraScreen";
 import useImagesTextures from "../hooks/useImagesTextures";
 import gsap from "gsap";
+import { sideModalControl } from "./SideModal";
 
 export default function SplineCamera({ ...props }) {
-  const { nodes, materials } = useSpline("https://prod.spline.design/erd3L7Tl6g7REq9t/scene.splinecode");
+  const { nodes, materials } = useSpline(
+    "https://prod.spline.design/erd3L7Tl6g7REq9t/scene.splinecode"
+  );
   const imageRef = useRef();
 
   const clickedOnCamera = useAppStore((state) => state.clickedOnCamera);
+  const setSideModalOpen = useAppStore((state) => state.setSideModalOpen);
+
+  const open = sideModalControl((state) => state.open);
 
   const textures = useImagesTextures();
 
@@ -23,19 +29,40 @@ export default function SplineCamera({ ...props }) {
 
     if (group.current) {
       if (clickedOnCamera === true) {
-        group.current.rotation.y = MathUtils.lerp(group.current.rotation.y, 0, 0.1);
+        group.current.rotation.y = MathUtils.lerp(
+          group.current.rotation.y,
+          0,
+          0.1
+        );
 
-        group.current.position.y = MathUtils.lerp(group.current.position.y, (0.1 + Math.sin(t) / 3) / 2, 0.1);
+        group.current.position.y = MathUtils.lerp(
+          group.current.position.y,
+          (0.1 + Math.sin(t) / 3) / 2,
+          0.1
+        );
         return;
       }
-      group.current.rotation.y = MathUtils.lerp(group.current.rotation.y, group.current.rotation.y + 0.05, 0.1);
-      group.current.position.y = MathUtils.lerp(group.current.position.y, (2 + Math.sin(t)) / 3, 0.1);
+      group.current.rotation.y = MathUtils.lerp(
+        group.current.rotation.y,
+        group.current.rotation.y + 0.05,
+        0.1
+      );
+      group.current.position.y = MathUtils.lerp(
+        group.current.position.y,
+        (2 + Math.sin(t)) / 3,
+        0.1
+      );
     }
   });
 
   const growImage = () => {
     gsap.set(".modal", { zIndex: 51 });
     gsap.to(".modal", { opacity: 1, zIndex: 51, duration: 0.5 });
+  };
+
+  const openSideModal = (e) => {
+    e.stopPropagation();
+    open();
   };
 
   return (
@@ -138,10 +165,7 @@ export default function SplineCamera({ ...props }) {
           position={[-25.07, -132.07, -164.72]}
           rotation={[-Math.PI / 2, 0, 0]}
           scale={0.5}
-          onClick={(e) => {
-            e.stopPropagation();
-            gsap.to(".sideModal", { right: 0, duration: 1 });
-          }}
+          onClick={openSideModal}
         >
           <group
             name="Information button text"

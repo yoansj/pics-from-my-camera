@@ -47,4 +47,8 @@ export const useAppStore = create((set) => ({
    * @returns void
    */
   currentPictureSet: (v) => set({ currentPicture: v }),
+
+  sideModalOpen: false,
+
+  setSideModalOpen: (v) => set({ sideModalOpen: v }),
 }));

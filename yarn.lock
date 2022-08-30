@@ -2196,6 +2196,11 @@ quick-lru@^5.1.1:
   resolved "https://registry.npmjs.org/quick-lru/-/quick-lru-5.1.1.tgz"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
 
+react-click-away-listener@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/react-click-away-listener/-/react-click-away-listener-2.2.1.tgz#c04b72783baf1a70b1f5bee3969019b3517cc565"
+  integrity sha512-l6KoQXrVgPVTGXTQllqMjzpmHDLBkm7LTOr3NIAhWeNc1JWyeecP/jh/3r77Jn9LxDxuYC0pJFuFg+fu06HdlA==
+
 react-colorful@^5.5.1:
   version "5.6.1"
   resolved "https://registry.npmjs.org/react-colorful/-/react-colorful-5.6.1.tgz"
