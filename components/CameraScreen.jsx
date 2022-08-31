@@ -1,6 +1,19 @@
-import { PerspectiveCamera, RenderTexture, Text, Image } from "@react-three/drei";
+import {
+  PerspectiveCamera,
+  RenderTexture,
+  Text,
+  Image,
+  useAspect,
+} from "@react-three/drei";
 import gsap from "gsap";
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
+import { pictureData } from "../assets/pictureData";
 import { useAppStore } from "../contexts/appState";
 import useImagesTextures from "../hooks/useImagesTextures";
 
@@ -12,6 +25,7 @@ function CameraScreen({ ...props }, ref) {
 
   const screenColor = useRef();
   const imageRef = useRef();
+  const imageScale = useAspect(5160, 3408, 0.02);
 
   const [colorFaded, setColorFaded] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
@@ -20,7 +34,7 @@ function CameraScreen({ ...props }, ref) {
   const nextImage = () => {
     if (isMoving) return;
     gsap.to(imageRef.current.position, {
-      x: 7,
+      x: 9,
       duration: 0.5,
       onStart: () => setIsMoving(true),
       onComplete: () => {
@@ -34,7 +48,7 @@ function CameraScreen({ ...props }, ref) {
         }
         gsap.fromTo(
           imageRef.current.position,
-          { x: -7 },
+          { x: -9 },
           { x: 0, duration: 0.5, onComplete: () => setIsMoving(false) }
         );
       },
@@ -43,7 +57,7 @@ function CameraScreen({ ...props }, ref) {
 
   const previousImage = () => {
     gsap.to(imageRef.current.position, {
-      x: -7,
+      x: -9,
       duration: 0.5,
       onStart: () => setIsMoving(true),
       onComplete: () => {
@@ -57,7 +71,7 @@ function CameraScreen({ ...props }, ref) {
         console.log(imageIndex, currentPicture);
         gsap.fromTo(
           imageRef.current.position,
-          { x: 7 },
+          { x: 9 },
           { x: 0, duration: 0.5, onComplete: () => setIsMoving(false) }
         );
       },
@@ -97,7 +111,7 @@ function CameraScreen({ ...props }, ref) {
         <Image
           ref={imageRef}
           position={[0, 7, 0]}
-          scale={[5, 5, 5]}
+          scale={imageScale}
           transparent
           opacity={1}
           texture={textures[imageIndex]}
@@ -106,17 +120,22 @@ function CameraScreen({ ...props }, ref) {
         <PerspectiveCamera
           makeDefault
           manual
-          aspect={1 / 1}
+          aspect={5160 / 3408}
           position={[0, 0, 7]}
         />
         <color attach="background" args={[0, 0, 0]} ref={screenColor} />
         <ambientLight intensity={0.5} />
         <directionalLight position={[10, 10, 5]} />
-        <Text fontSize={0.4} color="#000" position={[-2.8, 3.1, 0]}>
+        <Text fontSize={0.4} color="#000" position={[-4.5, 3.1, 0]}>
           {colorFaded && imageIndex + 1 + " / 3"}
         </Text>
-        <Text fontSize={0.4} color="#000" position={[-2.3, -3.1, 0]}>
+        <Text fontSize={0.4} color="#000" position={[-4, -3.1, 0]}>
           {colorFaded ? "cameraOs" : ""}
+        </Text>
+        <Text fontSize={0.4} color="#000" position={[3, 3.1, 0]}>
+          {colorFaded
+            ? `ISO ${pictureData[currentPicture].iso} ${pictureData[currentPicture].shutterSpeed} F${pictureData[currentPicture].aperture}`
+            : ""}
         </Text>
       </RenderTexture>
     </meshStandardMaterial>

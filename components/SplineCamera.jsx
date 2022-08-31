@@ -50,7 +50,6 @@ export default function SplineCamera({ ...props }) {
   });
 
   const growImage = () => {
-    gsap.set(".modal", { zIndex: 51 });
     gsap.to(".modal", { opacity: 1, zIndex: 51, duration: 0.5 });
   };
 
