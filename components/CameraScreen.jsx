@@ -27,6 +27,10 @@ function CameraScreen({ ...props }, ref) {
   const imageRef = useRef();
   const imageScale = useAspect(5160, 3408, 0.02);
 
+  useEffect(() => {
+    console.log(imageScale);
+  });
+
   const [colorFaded, setColorFaded] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [isMoving, setIsMoving] = useState(false);

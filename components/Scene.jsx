@@ -12,7 +12,9 @@ export default function Scene() {
   const cameraIntroDone = useAppStore((state) => state.cameraIntroDone);
   const cameraIntroSet = useAppStore((state) => state.cameraIntroSet);
   const clickedOnCameraSet = useAppStore((state) => state.clickedOnCameraSet);
+  const clickedOnCamera = useAppStore((state) => state.clickedOnCamera);
   const finishedZoomSet = useAppStore((state) => state.finishedZoomSet);
+  const finishedZoom = useAppStore((state) => state.finishedZoom);
 
   const { camera } = useThree();
 
@@ -45,9 +47,12 @@ export default function Scene() {
     });
   }, [camera]);
 
-  // TODO; Prevent triggerring animation twice on click on the camera
   const handleZoomAnimation = () => {
-    if (cameraIntroDone) {
+    if (
+      cameraIntroDone &&
+      finishedZoom === false &&
+      clickedOnCamera === false
+    ) {
       clickedOnCameraSet(true);
       gsap.to(camera.position, {
         x: 0,
