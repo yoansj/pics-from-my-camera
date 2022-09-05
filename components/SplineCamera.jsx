@@ -38,8 +38,8 @@ export default function SplineCamera({ ...props }) {
       }
       group.current.rotation.y = MathUtils.lerp(
         group.current.rotation.y,
-        group.current.rotation.y + 0.05,
-        0.1
+        Math.sin(t / 3) * 3,
+        0.05
       );
       group.current.position.y = MathUtils.lerp(
         group.current.position.y,
