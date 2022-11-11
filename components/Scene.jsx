@@ -1,4 +1,4 @@
-import { Cloud, OrbitControls, Sky } from "@react-three/drei";
+import { Cloud, Environment, OrbitControls, Sky } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useControls } from "leva";
@@ -105,7 +105,7 @@ export default function Scene() {
           }}
         />
       </Selection>
-
+      <Environment preset="city" />
       <Cloud
         opacity={1}
         speed={0.4}

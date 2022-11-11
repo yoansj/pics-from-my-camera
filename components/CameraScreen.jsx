@@ -13,7 +13,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { pictureData } from "../assets/pictureData";
 import { useAppStore } from "../contexts/appState";
 import useImagesTextures from "../hooks/useImagesTextures";
 
@@ -21,6 +20,7 @@ function CameraScreen({ ...props }, ref) {
   const finishedZoom = useAppStore((state) => state.finishedZoom);
   const currentPictureSet = useAppStore((state) => state.currentPictureSet);
   const currentPicture = useAppStore((state) => state.currentPicture);
+  const pictures = useAppStore((state) => state.pictures);
   const textures = useImagesTextures();
 
   const screenColor = useRef();
@@ -42,7 +42,6 @@ function CameraScreen({ ...props }, ref) {
       duration: 0.5,
       onStart: () => setIsMoving(true),
       onComplete: () => {
-        console.log(imageIndex, currentPicture);
         if (imageIndex + 1 > textures.length - 1) {
           setImageIndex(0);
           currentPictureSet(0);
@@ -72,7 +71,6 @@ function CameraScreen({ ...props }, ref) {
           setImageIndex((imageIndex) => imageIndex - 1);
           currentPictureSet(imageIndex - 1);
         }
-        console.log(imageIndex, currentPicture);
         gsap.fromTo(
           imageRef.current.position,
           { x: 9 },
@@ -131,14 +129,14 @@ function CameraScreen({ ...props }, ref) {
         <ambientLight intensity={0.5} />
         <directionalLight position={[10, 10, 5]} />
         <Text fontSize={0.4} color="#000" position={[-4.5, 3.1, 0]}>
-          {colorFaded && imageIndex + 1 + " / 3"}
+          {colorFaded && imageIndex + 1 + ` / ${textures.length}`}
         </Text>
         <Text fontSize={0.4} color="#000" position={[-4, -3.1, 0]}>
           {colorFaded ? "cameraOs" : ""}
         </Text>
-        <Text fontSize={0.4} color="#000" position={[3, 3.1, 0]}>
+        <Text fontSize={0.4} color="#000" position={[2.5, 3.1, 0]}>
           {colorFaded
-            ? `ISO ${pictureData[currentPicture].iso} ${pictureData[currentPicture].shutterSpeed} F${pictureData[currentPicture].aperture}`
+            ? `ISO ${pictures[currentPicture].exif.iso} ${pictures[currentPicture].exif.exposure_time} F${pictures[currentPicture].exif.aperture}`
             : ""}
         </Text>
       </RenderTexture>

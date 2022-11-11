@@ -1,8 +1,8 @@
 import gsap from "gsap";
 import { useAppStore } from "../contexts/appState";
-import { usedImages } from "../hooks/useImagesTextures";
 
 export default function Modal() {
+  const pictures = useAppStore((state) => state.pictures);
   const currentPicture = useAppStore((state) => state.currentPicture);
 
   return (
@@ -12,7 +12,13 @@ export default function Modal() {
         gsap.to(".modal", { opacity: 0, zIndex: -1, duration: 0.5 });
       }}
     >
-      <img src={usedImages[currentPicture]} className="w-[80%]" />
+      {pictures.length > 0 && (
+        <img
+          src={pictures[currentPicture].urls.regular}
+          className="w-[80%]"
+          alt="full sized picture"
+        />
+      )}
     </div>
   );
 }

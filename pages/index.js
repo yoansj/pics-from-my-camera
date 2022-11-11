@@ -1,13 +1,18 @@
 import { Loader, useProgress } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import { useQuery } from "@tanstack/react-query";
 import { Leva } from "leva";
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import { getCollection } from "../api/getCollection";
+import { getPicture } from "../api/getPicture";
 import Modal from "../components/Modal";
 import Scene from "../components/Scene";
 import SideModal from "../components/SideModal";
+import { useAppStore } from "../contexts/appState";
 
 export default function Home() {
+  const setPictures = useAppStore((state) => state.setPictures);
   const [debug, setDebug] = useState(false);
 
   const debugHandler = (e) => {
@@ -23,6 +28,24 @@ export default function Home() {
     return () => {
       window.removeEventListener("keydown", debugHandler);
     };
+  });
+
+  const { isLoading, isError, data, error, isSuccess } = useQuery({
+    queryKey: ["collection"],
+    queryFn: getCollection,
+  });
+
+  const { isLoading: loadingPics, data: pics } = useQuery({
+    queryKey: ["pictures"],
+    queryFn: () => {
+      const all = data.map((picture) => getPicture(picture.id));
+      return Promise.all(all);
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      setPictures(data);
+    },
+    enabled: isSuccess,
   });
 
   return (
@@ -41,7 +64,9 @@ export default function Home() {
           <p className="text-base">made by yoan saint juste</p>
         </h1>
         <p className="clickOnCamera absolute z-50 bottom-3 text-center w-full opacity-0">
-          - click on the camera -
+          {isLoading || loadingPics
+            ? "- loading some cool pictures -"
+            : "- click on the camera -"}
         </p>
         <Canvas camera={{ position: [80, 62, 77] }}>
           <Scene />

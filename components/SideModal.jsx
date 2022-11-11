@@ -1,7 +1,6 @@
 import gsap from "gsap";
 import ClickAwayListener from "react-click-away-listener";
 import create from "zustand";
-import { pictureData } from "../assets/pictureData";
 import { useAppStore } from "../contexts/appState";
 
 export const sideModalControl = create((set, get) => ({
@@ -30,12 +29,22 @@ export const sideModalControl = create((set, get) => ({
 export default function SideModal() {
   const close = sideModalControl((state) => state.close);
   const currentPicture = useAppStore((state) => state.currentPicture);
+  const pictures = useAppStore((state) => state.pictures);
+
+  if (pictures.length === 0) return null;
 
   return (
     <ClickAwayListener onClickAway={close}>
       <div className="sideModal w-[35vw] h-[100vh] bg-black/80 z-50 text-white absolute p-4 -right-full flex flex-col">
         <div className="flex justify-between mb-8">
-          <p>{pictureData[currentPicture].title}</p>
+          <a
+            href={pictures[currentPicture].links.html}
+            target="_blank"
+            rel="noreferrer"
+            className="underline underline-offset-2"
+          >
+            Original link
+          </a>
           <p
             onClick={close}
             className="cursor-pointer underline underline-offset-2"
@@ -45,17 +54,32 @@ export default function SideModal() {
         </div>
         <div className="space-y-4 mb-8">
           <div className="space-y-1">
-            <p>{pictureData[currentPicture].fileName}</p>
-            <p>ISO {pictureData[currentPicture].iso}</p>
-            <p>F {pictureData[currentPicture].aperture}</p>
-            <p>{pictureData[currentPicture].shutterSpeed}</p>
-            <p>{pictureData[currentPicture].focalLength}</p>
-            <p>{pictureData[currentPicture].camera}</p>
-            <p>{pictureData[currentPicture].date}</p>
-            <p>{pictureData[currentPicture].location}</p>
+            <p>
+              Likes: {pictures[currentPicture].likes} Downloads:{" "}
+              {pictures[currentPicture].downloads}
+            </p>
+            <p>ISO {pictures[currentPicture].exif.iso}</p>
+            <p>F {pictures[currentPicture].exif.aperture}</p>
+            <p>{pictures[currentPicture].exif.exposure_time}</p>
+            <p>{pictures[currentPicture].exif.focal_length + "mm"}</p>
+            <p>{pictures[currentPicture].exif.name}</p>
+            <p>{pictures[currentPicture].created_at}</p>
+            <p>{pictures[currentPicture].location.name}</p>
           </div>
         </div>
-        <p>{pictureData[currentPicture].description}</p>
+        <p>
+          {pictures[currentPicture].description.slice(0, 500) +
+            (pictures[currentPicture].description.length >= 500 ? "..." : "")}
+        </p>
+        <a
+          className="mt-8"
+          href={pictures[currentPicture].user.links.html}
+          target="_blank"
+          rel="noreferrer"
+        >
+          This picture like all the other pictures were taken by myself and can
+          be found on my Unsplash profile by clicking on this paragraph.
+        </a>
       </div>
     </ClickAwayListener>
   );

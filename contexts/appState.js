@@ -51,4 +51,16 @@ export const useAppStore = create((set) => ({
   sideModalOpen: false,
 
   setSideModalOpen: (v) => set({ sideModalOpen: v }),
+
+  /**
+   * Pictures from unsplash
+   */
+  pictures: [],
+
+  /**
+   * Changes the value of the pictures property
+   * @param {Array} v
+   * @returns void
+   */
+  setPictures: (v) => set({ pictures: v }),
 }));

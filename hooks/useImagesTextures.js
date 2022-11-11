@@ -1,13 +1,9 @@
 import { useTexture } from "@react-three/drei";
-import imageList from "../assets/imageList";
-
-export const usedImages = [
-  imageList[0].src,
-  imageList[5].src,
-  imageList[7].src,
-];
+import { useAppStore } from "../contexts/appState";
 
 export default function useImagesTextures() {
-  const textures = useTexture([...usedImages]);
+  const pictures = useAppStore((state) => state.pictures);
+  const picturesUrl = pictures.map((pic) => pic.urls.regular);
+  const textures = useTexture(picturesUrl);
   return textures;
 }
