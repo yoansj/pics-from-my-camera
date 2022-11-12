@@ -15,7 +15,7 @@ export default function Modal() {
       {pictures.length > 0 && (
         <img
           src={pictures[currentPicture].urls.regular}
-          className="w-[80%]"
+          className="w-[100%] lg:w-[80%]"
           alt="full sized picture"
         />
       )}

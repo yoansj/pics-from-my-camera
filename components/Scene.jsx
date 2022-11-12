@@ -7,6 +7,7 @@ import { useAppStore } from "../contexts/appState";
 import Debug from "./Debug";
 import SplineCamera from "./SplineCamera";
 import { EffectComposer, Bloom, Selection } from "@react-three/postprocessing";
+import { useMediaQuery } from "react-responsive";
 
 export default function Scene() {
   const cameraIntroDone = useAppStore((state) => state.cameraIntroDone);
@@ -15,6 +16,8 @@ export default function Scene() {
   const clickedOnCamera = useAppStore((state) => state.clickedOnCamera);
   const finishedZoomSet = useAppStore((state) => state.finishedZoomSet);
   const finishedZoom = useAppStore((state) => state.finishedZoom);
+
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
 
   const { camera } = useThree();
 
@@ -57,7 +60,7 @@ export default function Scene() {
       gsap.to(camera.position, {
         x: 0,
         y: 2,
-        z: -4.5,
+        z: isTabletOrMobile ? -7.5 : -4.5,
         duration: 2,
         onUpdate: () => {
           camera.lookAt(0, 0, 0);
@@ -84,14 +87,16 @@ export default function Scene() {
   return (
     <>
       {debug && <Debug />}
-      <EffectComposer>
-        <Bloom
-          intensity={0.6}
-          luminanceThreshold={0.45}
-          luminanceSmoothing={0.8}
-          height={300}
-        />
-      </EffectComposer>
+      {!isTabletOrMobile && (
+        <EffectComposer>
+          <Bloom
+            intensity={0.6}
+            luminanceThreshold={0.45}
+            luminanceSmoothing={0.8}
+            height={300}
+          />
+        </EffectComposer>
+      )}
       <Sky sunPosition={[500, 150, -1000]} turbidity={0.1} />
       {orbitControls && <OrbitControls enabled />}
       <ambientLight color="#fff1db" intensity={0.5} />
@@ -109,9 +114,9 @@ export default function Scene() {
       <Cloud
         opacity={1}
         speed={0.4}
-        width={400}
+        width={isTabletOrMobile ? 200 : 400}
         depth={1.5}
-        segments={400}
+        segments={isTabletOrMobile ? 200 : 400}
         position={[0, 62, 0]}
       />
     </>
