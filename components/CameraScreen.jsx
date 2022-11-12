@@ -33,8 +33,9 @@ function CameraScreen({ ...props }, ref) {
 
   const nextImage = () => {
     if (isMoving) return;
+
     gsap.to(imageRef.current.position, {
-      x: 9,
+      x: -9,
       duration: 0.5,
       onStart: () => setIsMoving(true),
       onComplete: () => {
@@ -47,7 +48,7 @@ function CameraScreen({ ...props }, ref) {
         }
         gsap.fromTo(
           imageRef.current.position,
-          { x: -9 },
+          { x: 9 },
           { x: 0, duration: 0.5, onComplete: () => setIsMoving(false) }
         );
       },
@@ -55,8 +56,10 @@ function CameraScreen({ ...props }, ref) {
   };
 
   const previousImage = () => {
+    if (isMoving) return;
+
     gsap.to(imageRef.current.position, {
-      x: -9,
+      x: 9,
       duration: 0.5,
       onStart: () => setIsMoving(true),
       onComplete: () => {
@@ -69,7 +72,7 @@ function CameraScreen({ ...props }, ref) {
         }
         gsap.fromTo(
           imageRef.current.position,
-          { x: 9 },
+          { x: -9 },
           { x: 0, duration: 0.5, onComplete: () => setIsMoving(false) }
         );
       },

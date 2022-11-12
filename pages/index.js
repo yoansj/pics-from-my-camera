@@ -8,6 +8,7 @@ import { getCollection } from "../api/getCollection";
 import { getPicture } from "../api/getPicture";
 import Modal from "../components/Modal";
 import Scene from "../components/Scene";
+import Seo from "../components/Seo";
 import SideModal from "../components/SideModal";
 import { useAppStore } from "../contexts/appState";
 
@@ -50,77 +51,35 @@ export default function Home() {
   if (isLoading || loadingPics) {
     return (
       <div className="flex items-center justify-center h-screen">
+        <Seo />
         <span className="loader"></span>
       </div>
     );
   } else if (isError) {
     return (
       <div className="flex items-center justify-center h-screen">
+        <Seo />
         <h1>It seems like an error occured please reload this page :(</h1>
       </div>
     );
   } else {
     return (
       <div>
-        <Head>
-          <title>Pics from my camera</title>
-          <meta
-            name="description"
-            content="A Three.js experiment made by Yoan Saint Juste"
-          />
-          <link rel="icon" href="/favicon.ico" />
-
-          <link
-            rel="apple-touch-icon"
-            sizes="180x180"
-            href="/apple-touch-icon.png"
-          />
-          <link
-            rel="icon"
-            type="image/png"
-            sizes="32x32"
-            href="/favicon-32x32.png"
-          />
-          <link
-            rel="icon"
-            type="image/png"
-            sizes="16x16"
-            href="/favicon-16x16.png"
-          />
-          <link rel="manifest" href="/site.webmanifest" />
-
-          {/* <!-- Open Graph / Facebook --> */}
-          <meta property="og:type" content="website" />
-          {/* <meta property="og:url" content="fill" /> */}
-          <meta property="og:title" content="Pics from my camera" />
-          <meta
-            property="og:description"
-            content="A Three.js experiment made by Yoan Saint Juste"
-          />
-          <meta property="og:image" content="/thumb.png" />
-
-          {/* <!-- Twitter --> */}
-          <meta property="twitter:card" content="summary_large_image" />
-          {/* <meta property="twitter:url" content={url} /> */}
-          <meta property="twitter:title" content="Pics from my camera" />
-          <meta
-            property="twitter:description"
-            content="A Three.js experiment made by Yoan Saint Juste"
-          />
-          <meta property="twitter:image" content="/thumb.png" />
-
-          {/* Base */}
-          <meta property="og:site_name" content="Pics from my camera" />
-          <meta property="og:type" content="website" />
-          <meta name="theme-color" content="#FFFFFF" />
-        </Head>
+        <Seo />
         <main className="overflow-hidden">
           <Modal />
           <SideModal />
           <h1 className="font-extrabold text-xl lg:text-4xl ml-2 title absolute z-50 top-[-5vh] opacity-0">
             Pics from my camera
             <p className="text-xs lg:text-base">A Three.js experiment</p>
-            <p className="text-xs lg:text-base">Made by Yoan Saint Juste</p>
+            <a
+              href="https://www.yoansj.com/"
+              target="_blank"
+              rel="noreferrer"
+              className="text-xs lg:text-base underline underline-offset-2"
+            >
+              Made by Yoan Saint Juste
+            </a>
           </h1>
           <p className="clickOnCamera absolute z-50 bottom-3 text-center w-full opacity-0">
             {isLoading || loadingPics
