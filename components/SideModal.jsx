@@ -96,10 +96,12 @@ export default function SideModal() {
             <p>{pictures[currentPicture].location.name}</p>
           </div>
         </div>
-        <p>
-          {pictures[currentPicture].description.slice(0, 500) +
-            (pictures[currentPicture].description.length >= 500 ? "..." : "")}
-        </p>
+        {pictures[currentPicture].description && (
+          <p>
+            {pictures[currentPicture].description.slice(0, 500) +
+              (pictures[currentPicture].description.length >= 500 ? "..." : "")}
+          </p>
+        )}
         <a
           className="mt-8"
           href={pictures[currentPicture].user.links.html}
@@ -147,10 +149,12 @@ export default function SideModal() {
             <p>{pictures[currentPicture].location.name}</p>
           </div>
         </div>
-        <p>
-          {pictures[currentPicture].description.slice(0, 500) +
-            (pictures[currentPicture].description.length >= 500 ? "..." : "")}
-        </p>
+        {pictures[currentPicture].description && (
+          <p>
+            {pictures[currentPicture].description.slice(0, 500) +
+              (pictures[currentPicture].description.length >= 500 ? "..." : "")}
+          </p>
+        )}
         <a
           className="mt-8"
           href={pictures[currentPicture].user.links.html}
